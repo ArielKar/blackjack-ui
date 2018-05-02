@@ -109,7 +109,6 @@ function onLoad() {
     }
 
     function nextTurn(currElem) {
-        console.log(currElem);
         let opponentsHitMeBtn;
         let opponentsStayBtn;
         let currentPlayerHitBtn = currElem.children[3].children[0];
