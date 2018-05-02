@@ -142,6 +142,8 @@ function onLoad() {
         playerTwoScore = 0;
         pOneScore.innerText = playerOneScore;
         pTwoScore.innerText = playerTwoScore;
+        pOne.dataset.stay = 'false';
+        pTwo.dataset.stay = 'false';
     }
 }
 
