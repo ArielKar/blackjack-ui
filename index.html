@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Black Jack</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="main.js"></script>
+</head>
+<body onload = onLoad()>
+    <div class="container">
+        <h1>Welcome to My Blackjack</h1>
+        <div id="player-one" class="player-container" data-stay="false">
+            <h2>Player 1</h2>
+            <h2>Your Score: <span id="player-one-score"></span></h2>
+            <div class="card">
+                <p class="card-display" id="player-one-card"></p>
+            </div>
+            <div class="buttons-holder">
+                <button id="player-one-hitme" type="button" class="btn hit-me-btn">Hit me!</button>
+                <button id="player-one-stay" type="button" class="btn stay-btn">Stay!</button>
+            </div>
+        </div>
+        <div id="player-two" class="player-container" data-stay="false">
+            <h2>Player 2</h2>
+            <h2>Your Score: <span id="player-two-score"></span></h2>
+            <div class="card">
+                <p class="card-display" id="player-two-card"></p>
+            </div>
+            <div class="buttons-holder">
+                <button id="player-two-hitme" type="button" class="btn hit-me-btn">Hit me!</button>
+                <button id="player-two-stay" type="button" class="btn stay-btn">Stay!</button>
+            </div>
+        </div>
+        <div>
+            <button id="reset" class="btn">Reset</button>
+        </div>
+    </div>
+</body>
+</html>
