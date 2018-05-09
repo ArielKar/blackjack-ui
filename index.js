@@ -109,11 +109,10 @@ app.get('/room/:roomId/players/:userId/draw', function (req, res) {
         return;
     }
 
-    let drawn = Math.floor((Math.random()*10)+1);
+    let drawn = Math.floor((Math.random()*11)+1);
 
     user.addScore(drawn);
     user.drawn = drawn;
-
     res.status(200).send(user);
 });
 

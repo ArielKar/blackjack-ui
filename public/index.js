@@ -1,5 +1,21 @@
 
-function onLoad() {
+$(function () {
+
+    const cards = {
+        1:'./static/resources/AH.png',
+        2:'./static/resources/2C.png',
+        3:'./static/resources/3D.png',
+        4:'./static/resources/4S.png',
+        5:'./static/resources/5H.png',
+        6:'./static/resources/6C.png',
+        7:'./static/resources/7H.png',
+        8:'./static/resources/8C.png',
+        9:'./static/resources/9D.png',
+        10:'./static/resources/10S.png',
+        11:'./static/resources/AH.png'
+    };
+    let playerOneName;
+    let playerTwoName;
     let playerOneScore = 0;
     let playerTwoScore = 0;
 
@@ -18,6 +34,17 @@ function onLoad() {
     pOneScore.innerText = playerOneScore;
     pTwoScore.innerText = playerTwoScore;
 
+    $('#player1-join-btn').click(() => {
+        playerOneName = $('#player1-join-input').val();
+        $('#player1-name').text(playerOneName);
+
+    });
+    $('#player2-join-btn').click(() => {
+        playerTwoName = $('#player2-join-input').val();
+        $('#player2-name').text(playerTwoName);
+    });
+    $('#new-player-btn').click(addNewPlayer);
+
     pOneHitme.addEventListener('click', hitMe);
     pTwoHitme.addEventListener('click', hitMe);
 
@@ -27,19 +54,26 @@ function onLoad() {
     document.querySelector('#reset').addEventListener('click', reset);
 
     function hitMe(e) {
-        let myNum = Math.floor((Math.random()*10)+1);
-        flashCard(e.target.parentNode.previousElementSibling.children[0], myNum);
-        if (!(e.target.parentNode.parentNode.nextElementSibling.dataset.stay === 'true' || e.target.parentNode.parentNode.previousElementSibling.dataset.stay === 'true')) {
-            nextTurn(e.path[2]);
-        }
-        updateScore(e.path[2], myNum);
+        let currPlayer = $(e.target.parentNode).next().find('input').val();
+
+        $.ajax({
+           method: 'GET',
+           url: `http://localhost:3000/room/MyRoom/players/${currPlayer}/draw`,
+            success: function(res) {
+                let myNum = res.drawn;
+                flashCard(e.target.parentNode.previousElementSibling.children[0], myNum);
+                if (!(e.target.parentNode.parentNode.nextElementSibling.dataset.stay === 'true' || e.target.parentNode.parentNode.previousElementSibling.dataset.stay === 'true')) {
+                    nextTurn(e.path[2]);
+                }
+                updateScore(e.path[2], myNum);
+            }
+        });
     }
 
     function flashCard(element, value) {
-        element.innerText = value;
-        setTimeout(() => {
-           element.innerText = '';
-        }, 1000);
+        let myCardElem = $('<img />').attr("src", cards[value]);
+        console.log(value);
+        element.appendChild(myCardElem[0]);
     }
 
     function updateScore(player, num) {
@@ -98,11 +132,11 @@ function onLoad() {
         player.dataset.stay = 'true';
         player.children[3].children[0].disabled = true;
         player.children[3].children[1].disabled = true;
-         if (player.nextElementSibling.children[3]) {
-             opponentButtons = player.nextElementSibling.children[3];
-         } else {
-             opponentButtons = player.previousElementSibling.children[3];
-         }
+        if (player.nextElementSibling.children[3]) {
+            opponentButtons = player.nextElementSibling.children[3];
+        } else {
+            opponentButtons = player.previousElementSibling.children[3];
+        }
         opponentButtons.children[0].disabled = false;
         opponentButtons.children[1].disabled = false;
         checkScore();
@@ -143,8 +177,29 @@ function onLoad() {
         pTwoScore.innerText = playerTwoScore;
         pOne.dataset.stay = 'false';
         pTwo.dataset.stay = 'false';
+        $('#player-two-card').html('');
+        $('#player-one-card').html('');
     }
-}
 
+    function addNewPlayer() {
+        let playerToAdd = $('#new-player-input').val();
+        $.ajax({
+            method: 'POST',
+            url: `http://localhost:3000/room/MyRoom/players/${playerToAdd}`,
+            success: updatePlayersList
+        });
+    }
 
+    function updatePlayersList(res) {
+        console.log(res.players[res.players.length-1]);
+        let addedPlayer = res.players[res.players.length-1];
+        createPlayerTile(addedPlayer.name, addedPlayer.score);
+    }
 
+    function createPlayerTile(name, score){
+        let playerTile = $('<div />').html(`<h3>${name}</h3><h2>${score}</h2>`);
+        playerTile.addClass('player-tile');
+        $('#players-tile-wrapper').append(playerTile);
+    }
+
+});
