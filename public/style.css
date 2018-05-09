@@ -1,0 +1,22 @@
+body {
+    text-align: center;
+}
+
+.cards-display {
+    overflow: hidden;
+}
+
+.cards-display img {
+    height: 150px;
+    margin: 10px;
+}
+
+.lose {
+    color: red;
+    display: none;
+}
+
+.your-score {
+    color: green;
+    display: none;
+}
